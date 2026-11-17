@@ -1,0 +1,1 @@
+Adicione nesta pasta imagens otimizadas, com menos de 500 KiB por arquivo.
