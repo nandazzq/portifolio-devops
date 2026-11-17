@@ -1,0 +1,60 @@
+name: CI - Validacao do Portfolio
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    name: Validacao (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Verificar arquivos do site
+        run: |
+          test -f index.html
+          test -f style.css
+          test -d imagens
+
+      - name: Verificar arquivos acima de 500 KiB
+        run: |
+          arquivos=$(find . -type f -size +512000c \
+            -not -path './.git/*' \
+            -not -path './node_modules/*')
+          if [ -n "$arquivos" ]; then
+            echo "Arquivos acima de 500 KiB:"
+            printf '%s\n' "$arquivos"
+            exit 1
+          fi
+
+      - name: Procurar termos proibidos
+        run: |
+          if grep -Ein '(TODO|FIXME|senha|password)' index.html style.css; then
+            echo 'ERRO: termo proibido encontrado'
+            exit 1
+          fi
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+
+      - name: Validar HTML
+        run: npm run lint
+
+      - name: Validar links e imagens
+        run: npm run links
