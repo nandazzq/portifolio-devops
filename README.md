@@ -15,7 +15,7 @@ Site estático com validações em Pull Requests para a branch `main` e publica�
 Execute `npm install`, `npm run lint` e `npm run links`.
 
 ## Configurações necessárias
-1. Substitua `SEU_USUARIO/SEU_REPOSITORIO` na URL do badge.
+1. Substitua `nandazzq/portifolio-devops` na URL do badge.
 2. Em Settings > Pages, defina **GitHub Actions** como fonte de publicação.
 3. Proteja `main` em Settings > Rules > Rulesets, exigindo sucesso das duas verificações de CI.
 4. Opcional: crie o secret `DISCORD_WEBHOOK_URL` para receber alertas de falha no deploy.
